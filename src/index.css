@@ -42,13 +42,15 @@ body {
 
 @font-face {
   font-family: 'Mabella';
-  src: url('assets/Mabella.TTF') format('truetype');
+  src: url('/src/assets/Mabella.TTF') format('truetype');
   font-weight: 900;
   font-style: normal;
 }
+
 .mabella {
   font-family: 'Mabella';
 }
+
 @font-face {
   font-family: 'TT-Moons-Thin-Italic-DEMO';
   src: url('assets/TT-Moons-Thin-Italic-DEMO.OTF') format('truetype');

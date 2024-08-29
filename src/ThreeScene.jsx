@@ -1,6 +1,9 @@
 import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { sandVertexShader } from './shaders/sandVertexShader';
+import { sandFragmentShader } from './shaders/sandFragmentShader';
 
 const ThreeScene = () => {
   const mountRef = useRef(null);
@@ -14,9 +17,12 @@ const ThreeScene = () => {
       0.1,
       1000
     );
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
 
-    // Füge den Renderer zur Seite hinzu
+    // Renderer erstellen und an Pixel-Verhältnis anpassen
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
     if (mountRef.current) {
       mountRef.current.appendChild(renderer.domElement);
     }
@@ -31,8 +37,34 @@ const ThreeScene = () => {
 
     // Kamera-Position setzen
     camera.position.z = 5;
+    camera.position.y = 2;
 
-    // Ein einfaches Würfel-Mesh erstellen
+    // Kamera-Steuerung hinzufügen
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.25;
+    controls.enableZoom = true;
+
+    const sandMaterial = new THREE.ShaderMaterial({
+      vertexShader: sandVertexShader,
+      fragmentShader: sandFragmentShader,
+      uniforms: {
+        uTime: { value: 0.0 },
+        uColor1: { value: new THREE.Color(0xe0ac69) },  // Sandfarbe 1
+        uColor2: { value: new THREE.Color(0xf4deb8) }   // Sandfarbe 2
+      },
+      side: THREE.DoubleSide
+    });
+    
+
+    // Sand-Plane erstellen
+    const sandGeometry = new THREE.PlaneGeometry(10, 10, 100, 100);
+    const sand = new THREE.Mesh(sandGeometry, sandMaterial);
+    sand.rotation.x = -Math.PI / 2;
+    sand.position.y = 0.2;
+    scene.add(sand);
+
+    // Würfel erstellen
     const geometry = new THREE.BoxGeometry();
     const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
     const cube = new THREE.Mesh(geometry, material);
@@ -46,11 +78,9 @@ const ThreeScene = () => {
         backgroundScene.position.set(0, -10, -10);
         backgroundScene.scale.set(1, 1, 1);
 
-        // Traverse das Modell, um jedes Mesh zu bearbeiten
         backgroundScene.traverse((child) => {
           if (child.isMesh) {
             const originalMaterial = child.material;
-
             const map = originalMaterial.map || null;
             const normalMap = originalMaterial.normalMap || null;
             const displacementMap = originalMaterial.displacementMap || null;
@@ -66,22 +96,24 @@ const ThreeScene = () => {
           }
         });
 
-        scene.add(backgroundScene); // Hintergrund zur Szene hinzufügen
+        scene.add(backgroundScene);
       });
     }
 
-    // Hintergrund laden und initialisieren
     loadBackground();
 
     // Animationsfunktion
     const animate = () => {
       requestAnimationFrame(animate);
-      cube.rotation.x += 0.01; // Würfel rotieren lassen
+      cube.rotation.x += 0.01; 
       cube.rotation.y += 0.01;
       renderer.render(scene, camera);
+      
+      // Aktualisiere die Zeit für die Shader-Animation
+      sandMaterial.uniforms.uTime.value += 0.02; 
     };
+    
 
-    // Start der Animation
     animate();
 
     // Fenstergrößenänderung
@@ -93,10 +125,9 @@ const ThreeScene = () => {
         camera.updateProjectionMatrix();
       }
     };
-    
 
     window.addEventListener('resize', handleResize);
-    handleResize(); // Initiale Größenanpassung
+    handleResize();
 
     // Cleanup bei Komponentenunmount
     return () => {
