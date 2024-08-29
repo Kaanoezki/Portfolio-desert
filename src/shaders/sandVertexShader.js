@@ -9,10 +9,10 @@ export const sandVertexShader = `
     vPosition = position;
     vNormal = normal;
 
-    vec3 pos = position;
-    float wave = sin(pos.x * 10.0 + uTime) * 0.1;
-    pos.y += wave;
-    
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+    // Wellen-Effekt
+    float waveHeight = sin(position.x * 2.0 + uTime) * 0.1; // Höhe und Geschwindigkeit der Welle
+    vec3 newPosition = position + normal * waveHeight;
+
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
   }
 `;
