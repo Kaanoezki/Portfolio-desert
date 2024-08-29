@@ -1,0 +1,132 @@
+/* App.css */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+}
+
+.header-container {
+  display: flex; /* Flexbox für horizontales Layout */
+  align-items: stretch; 
+  min-height: 100vh;
+  width: 100vw; 
+}
+
+.header {
+  display: flex;
+  flex-direction: column; /* Ändere die Richtung zu Spalte */
+  align-items: center; /* Zentriere horizontal */
+  justify-content: center; /* Zentriere vertikal */
+  font-size: 2vw;
+  font-weight: bold;
+  font-style: oblique;
+  font-family: "Montserrat", sans-serif;
+  background: rgb(78, 173, 184);
+  color: #fff;
+  border: 0.1rem solid black;
+  width: 50vw; 
+  min-height: 20vh;
+  box-sizing: border-box;
+  padding: 1vh;
+}
+
+.bungee-tint-regular {
+  font-family: 'Bungee Tint', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Mabella';
+  src: url('assets/Mabella.TTF') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+.mabella {
+  font-family: 'Mabella';
+}
+@font-face {
+  font-family: 'TT-Moons-Thin-Italic-DEMO';
+  src: url('assets/TT-Moons-Thin-Italic-DEMO.OTF') format('truetype');
+  font-weight: 500;
+  font-style:oblique;
+}
+.TT-Moons-Thin-Italic-DEMO {
+  font-family: 'TT-Moons-Thin-Italic-DEMO';
+}
+
+.confidentials-item{
+  background-color: #4CAF50; 
+
+  color: white;
+  font-size: 2em; 
+  text-align: center;
+}
+.confidentials-container{
+ 
+  display: flex;
+  align-items: stretch;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 15vh; 
+  background-color: #f0f0f0;
+  transition: all 0.5s ease-out;
+  animation-duration: 2s;
+
+}
+.confidentials-text{
+  flex: 1;
+  display: flex; 
+  flex-direction: column;
+  align-items: flex-start;
+  border: 0.1rem solid black;
+  padding-left: 5vw;
+  padding-top:2vh;
+}
+
+.portrait {
+  transform: translateX(1vw);
+  z-index: 2;
+  background-image: url("src/assets/b-photo.png");
+  object-fit: scale-down;
+  background-size: 100%;
+  height: 20vh;
+  width: 20vh;
+  border-radius: 50%;
+  border-style: solid;
+  border-width: 0.1vh;
+  margin: 2vh;
+  opacity: 0.5;
+  transition: opacity 2s ease-out; 
+ 
+
+}
+.portrait:hover{
+  opacity: 1; 
+
+}
+
+.canvas-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 75vw; /* Stellt sicher, dass Canvas-Bereich 75vw hat */
+  box-sizing: border-box;
+}
+
+footer {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  background-color: #242424;
+  color: white;
+  width: 100vw;
+  box-sizing: border-box;
+}
