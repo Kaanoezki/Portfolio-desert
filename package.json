@@ -17,7 +17,13 @@
     "dependencies": {
   
       
+    "@react-three/drei": "^9.111.4",
+  
+      
     "@react-three/fiber": "^8.17.6",
+  
+      
+    "@react-three/postprocessing": "^2.16.2",
   
       
     "my-react-app": "file:",

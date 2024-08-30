@@ -1,7 +1,9 @@
   // App.jsx
   import './App.css';
   import ThreeScene from './ThreeScene';
+  import React, { useState } from 'react';
 
+  
   function App() {
     return (
       <>

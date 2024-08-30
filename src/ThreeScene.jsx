@@ -5,6 +5,9 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { sandVertexShader } from './shaders/sandVertexShader.js';
 import { sandFragmentShader } from './shaders/sandFragmentShader.js';
 import { glitterFragmentShader } from './shaders/glitterFragmentShader.js';
+import BloomEffect from './bloomEffect'; 
+
+
 
 const ThreeScene = () => {
   const mountRef = useRef(null);
@@ -29,9 +32,9 @@ const ThreeScene = () => {
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.3);
-    directionalLight.position.set(10, 10, 10);
-    scene.add(directionalLight);
+    // const directionalLight = new THREE.DirectionalLight(0xffffff, 0.3);
+    // directionalLight.position.set(10, 10, 10);
+    // scene.add(directionalLight);
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
@@ -40,23 +43,34 @@ const ThreeScene = () => {
     camera.position.z = 5;
     camera.position.y = 2;
 
+    
+    const reflectiveMaterial = new THREE.MeshStandardMaterial({
+      color: 0xffffff,
+      emissive: 0x686868, // Leuchtfarbe
+      emissiveIntensity: 2.0, // Intensität der Emission
+      metalness: 1.0,  // Hohes Metalness für starke Reflexionen
+      roughness: 0.1,  // Geringe Rauheit für glänzende Reflexionen
+    });
+    const sphere = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), reflectiveMaterial);
+    scene.add(sphere);
+    
     // Sand Material
     const sandMaterial = new THREE.ShaderMaterial({
       vertexShader: sandVertexShader,
       fragmentShader: sandFragmentShader,
       uniforms: {
         uTime: { value: 0.0 },
-        uColor1: { value: new THREE.Color(0xe0ac69) }, // Sandfarbe 1
+        uColor1: { value: new THREE.Color(0xe9ac99) }, // Sandfarbe 1
         uColor2: { value: new THREE.Color(0xf4deb8) }, // Sandfarbe 2
-        uLightPosition: { value: new THREE.Vector3(10, 10, 10) },
+        // uLightPosition: { value: new THREE.Vector3(10, 10, 10) },
         uCameraPosition: { value: camera.position },
-        uShininess: { value: 1.0 },
-        uRimPower: { value: 1 },
+        uShininess: { value: 3 },
+        uRimPower: { value:1 },
       },
       side: THREE.DoubleSide
     });
 
-    const sandGeometry = new THREE.PlaneGeometry(10, 10, 200, 200);
+    const sandGeometry = new THREE.PlaneGeometry(300, 300, 200, 200);
     const sand = new THREE.Mesh(sandGeometry, sandMaterial);
     sand.rotation.x = -Math.PI / 2;
     sand.position.y = 0.0;
@@ -86,8 +100,8 @@ const ThreeScene = () => {
     const glitterGeometry = new THREE.PlaneGeometry(10, 10, 200, 200);
     const glitter = new THREE.Mesh(glitterGeometry, glitterMaterial);
     glitter.rotation.x = -Math.PI / 2;
-    glitter.position.y = 0.01; // Slightly above the sand
-    glitter.renderOrder = 1; // Ensure glitter is rendered on top of sand
+    glitter.position.y = 0.01;
+    glitter.renderOrder = 1; 
     scene.add(glitter);
 
     // Cube
@@ -128,6 +142,8 @@ const ThreeScene = () => {
 
     loadBackground();
 
+    const composer = BloomEffect(renderer, scene, camera);
+
     const animate = () => {
       requestAnimationFrame(animate);
       cube.rotation.x += 0.01;
@@ -135,7 +151,7 @@ const ThreeScene = () => {
       controls.update();
 
       // Update uniforms
-      sandMaterial.uniforms.uTime.value += 0.1; 
+      sandMaterial.uniforms.uTime.value += 0.01; 
       sandMaterial.uniforms.uCameraPosition.value = camera.position;
 
       // Update glitter
@@ -152,6 +168,7 @@ const ThreeScene = () => {
         renderer.setSize(clientWidth, clientHeight);
         camera.aspect = clientWidth / clientHeight;
         camera.updateProjectionMatrix();
+        composer.setSize(clientWidth, clientHeight); 
       }
     };
 
