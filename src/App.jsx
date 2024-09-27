@@ -8,7 +8,6 @@
     return (
       <>
       <div className="main ">132132adsads
-        <div className='mabella'>132132adsads</div>
         </div>
         <div className='TT-Moons-Thin-Italic-DEMO'>132132adsads</div>
 
